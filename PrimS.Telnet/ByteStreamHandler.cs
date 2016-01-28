@@ -12,7 +12,13 @@ namespace PrimS.Telnet
   public partial class ByteStreamHandler : IByteStreamHandler
   {
     private readonly IByteStream byteStream;
-    
+
+    /// <summary>
+    /// Gets a value indicating whether this instance has unhandled streamed content.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if this instance is response pending; otherwise, <c>false</c>.
+    /// </value>
     private bool IsResponsePending
     {
       get
@@ -41,6 +47,12 @@ namespace PrimS.Telnet
       return result;
     }
 
+    /// <summary>
+    /// Determines if we're still waiting for an initial response to be received.
+    /// </summary>
+    /// <param name="endInitialTimeout">The initial timeout.</param>
+    /// <param name="sb">The stringBuilder collecting the stream.</param>
+    /// <returns>True if no response has been received, otherwise false if any response received or we timed out waiting for a response.</returns>
     private static bool IsWaitForInitialResponse(DateTime endInitialTimeout, StringBuilder sb)
     {
       return sb.Length == 0 && DateTime.Now < endInitialTimeout;
