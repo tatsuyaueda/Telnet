@@ -79,7 +79,7 @@ namespace PrimS.Telnet
             {
               case (int)Commands.InterpretAsCommand:
                 // literal IAC = 255 escaped, so append char 255 to string
-                sb.Append(inputVerb);
+                AppendChar(sb, inputVerb);
                 break;
               case (int)Commands.Do:
               case (int)Commands.Dont:
@@ -92,8 +92,10 @@ namespace PrimS.Telnet
             }
 
             break;
+          case (int)Commands.NoOperation:
+            break;
           default:
-            sb.Append((char)input);
+            AppendChar(sb, input);
             break;
         }
 
@@ -101,6 +103,12 @@ namespace PrimS.Telnet
       }
 
       return false;
+    }
+
+    private static void AppendChar(StringBuilder sb, int inputVerb)
+    {
+      char c = (char)inputVerb;
+      sb.Append(c);
     }
 
     private void ReplyToCommand(int inputVerb)
