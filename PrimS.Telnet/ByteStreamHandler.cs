@@ -1,6 +1,7 @@
 namespace PrimS.Telnet
 {
   using System;
+  using System.Collections.Generic;
   using System.Text;
 #if ASYNC
   using System.Threading.Tasks;
@@ -41,12 +42,12 @@ namespace PrimS.Telnet
       return result;
     }
 
-    private static bool IsWaitForInitialResponse(DateTime endInitialTimeout, StringBuilder sb)
+    private static bool IsWaitForInitialResponse(DateTime endInitialTimeout, List<byte> sb)
     {
-      return sb.Length == 0 && DateTime.Now < endInitialTimeout;
+      return sb.Count == 0 && DateTime.Now < endInitialTimeout;
     }
 
-    private bool RetrieveAndParseResponse(StringBuilder sb)
+    private bool RetrieveAndParseResponse(List<byte> sb)
     {
       if (this.IsResponsePending)
       {
@@ -67,7 +68,7 @@ namespace PrimS.Telnet
             {
               case (int)Commands.InterpretAsCommand:
                 // literal IAC = 255 escaped, so append char 255 to string
-                sb.Append(inputVerb);
+                sb.Add((byte)inputVerb);
                 break;
               case (int)Commands.Do:
               case (int)Commands.Dont:
@@ -81,7 +82,7 @@ namespace PrimS.Telnet
 
             break;
           default:
-            sb.Append((char)input);
+            sb.Add((byte)input);
             break;
         }
 

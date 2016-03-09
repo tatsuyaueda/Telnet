@@ -1,6 +1,7 @@
 ﻿namespace PrimS.Telnet
 {
   using System;
+  using System.Collections.Generic;
   using System.Text;
   using System.Threading;
 #if ASYNC
@@ -45,7 +46,7 @@
         return string.Empty;
       }
 
-      StringBuilder sb = new StringBuilder();
+      List<byte> sb = new List<byte>();
       this.byteStream.ReceiveTimeout = (int)timeout.TotalMilliseconds;
       DateTime endInitialTimeout = DateTime.Now.Add(timeout);
       DateTime rollingTimeout = ExtendRollingTimeout(timeout);
@@ -66,7 +67,7 @@
         System.Diagnostics.Debug.Print("RollingTimeout exceeded {0}", DateTime.Now.ToString("ss:fff"));
       }
 
-      return sb.ToString();
+      return Encoding.GetEncoding("SHIFT_JIS").GetString(sb.ToArray());
     }
   }
 }
